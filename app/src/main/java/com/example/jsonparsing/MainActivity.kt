@@ -13,6 +13,7 @@ import com.example.jsonparsing.databinding.ActivityMainBinding
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.squareup.picasso.Picasso
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -62,7 +63,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                     val picture = JSONObject(JSONObject(results[0].toString()).get("picture").toString())
 
-                    setPhoto(picture.getString("large"))
+                    setPhotoWithGlide(picture.getString("large"))
                 }
             }
 
@@ -79,7 +80,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         binding.name.text = "$title $first $last"
 
                         val picture = result.getAsJsonObject("picture")
-                        setPhoto(picture.get("large").asString)
+                        setPhotoWithGlide(picture.get("large").asString)
                     }
                 }
             }
@@ -97,17 +98,23 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         binding.name.text = "$title $first $last"
 
                         val picture = result.getAsJsonObject("picture")
-                        setPhoto(picture.get("large").asString)
+                        setPhotoWithPicasso(picture.get("large").asString)
                     }
                 }
             }
         }
     }
 
-    private fun setPhoto(url: String) {
+    private fun setPhotoWithGlide(url: String) {
         Glide.with(this)
             .load(url)
             .transform(CenterCrop(), RoundedCorners(12))
+            .into(binding.profileImg)
+    }
+
+    private fun setPhotoWithPicasso(url: String) {
+        Picasso.get()
+            .load(url)
             .into(binding.profileImg)
     }
 }
